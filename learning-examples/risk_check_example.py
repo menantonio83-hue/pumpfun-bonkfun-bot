@@ -27,6 +27,9 @@ async def check_token_risk(mint: str, max_cluster_percent: float = 50.0) -> None
 
     async with aiohttp.ClientSession() as session:
         async with session.get(RISK_API_URL, params={"mint": mint}, headers=headers) as response:
+            if response.status != 200:
+                print(f"Risk API unavailable (HTTP {response.status}) — check did not run, result unknown.")
+                return
             data = await response.json()
 
     print(f"mint: {mint}")
